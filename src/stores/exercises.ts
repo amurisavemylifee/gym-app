@@ -7,8 +7,8 @@ const LOCAL_STORAGE_KEY = 'exercises';
 const exercises = ref<Exercise[]>([]);
 
 export function useExercisesStore() {
-  onMounted(() => {
-    exercises.value = localStorage.getItem(LOCAL_STORAGE_KEY) ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)!) : [];
+  onBeforeMount(() => {
+    exercises.value = localStorage.getItem(LOCAL_STORAGE_KEY) ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)!) : [{ exerciseId: useUuid('exercise'), name: 'test', description: 'test' }];
   });
 
   watch(
