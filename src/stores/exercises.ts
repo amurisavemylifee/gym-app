@@ -1,62 +1,49 @@
 import { useUuid } from '@/composition/useUuid';
 
-import type { Exercise } from '@/types';
+import type { CreateExercise, Exercise, ExerciseId } from '@/types';
 
-const exercises = ref<Exercise[]>([
-  {
-    name: 'Жим лежа (штанга)',
-    description: '-',
-    exerciseId: useUuid('exercise'),
-  },
-  {
-    name: 'Жим лежа (гантели)',
-    description: '-',
-    exerciseId: useUuid('exercise'),
-  },
-  {
-    name: 'Жим в наклоне 45 (штанга)',
-    description: '-',
-    exerciseId: useUuid('exercise'),
-  },
-  {
-    name: 'Жим в наклоне 45 (гантели)',
-    description: '-',
-    exerciseId: useUuid('exercise'),
-  },
-  {
-    name: 'Бабочка (сведения)',
-    description: '-',
-    exerciseId: useUuid('exercise'),
-  },
-  {
-    name: 'Бицепс с французским грифом',
-    description: '-',
-    exerciseId: useUuid('exercise'),
-  },
-  {
-    name: 'Гантели на бицепс',
-    description: '-',
-    exerciseId: useUuid('exercise'),
-  },
-  {
-    name: 'Бицепс в тренажере',
-    description: '-',
-    exerciseId: useUuid('exercise'),
-  },
-  {
-    name: 'Трицепс в тренажере',
-    description: '-',
-    exerciseId: useUuid('exercise'),
-  },
-  {
-    name: 'Трицепс в кроссовере с косичками',
-    description: '-',
-    exerciseId: useUuid('exercise'),
-  },
-]);
+const LOCAL_STORAGE_KEY = 'exercises';
+
+const exercises = ref<Exercise[]>([]);
 
 export function useExercisesStore() {
+  onMounted(() => {
+    exercises.value = localStorage.getItem(LOCAL_STORAGE_KEY) ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)!) : [];
+  });
+
+  watch(
+    exercises,
+    () => {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(exercises));
+    },
+    { deep: true }
+  );
+
+  const addExercise = (exercise: CreateExercise) => {
+    exercises.value.push({ exerciseId: useUuid('exercise'), ...exercise });
+  };
+
+  const removeExercise = (exerciseId: ExerciseId) => {
+    exercises.value = exercises.value.filter((item) => item.exerciseId !== exerciseId);
+  };
+
+  const updateExercise = (exerciseId: ExerciseId, exercise: Exercise) => {
+    const index = exercises.value.findIndex((item) => item.exerciseId === exerciseId);
+
+    if (index !== -1) {
+      exercises.value[index] = { ...exercise, exerciseId };
+    }
+  };
+
+  const getExerciseById = (exerciseId: ExerciseId) => {
+    return exercises.value.find((item) => item.exerciseId === exerciseId);
+  };
+
   return reactive({
     exercises,
+    addExercise,
+    removeExercise,
+    updateExercise,
+    getExerciseById,
   });
 }

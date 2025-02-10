@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import CreateWorkoutForm from '@/components/CreateWorkoutForm.vue';
 import type { CreateWorkout } from '@/types';
+
+import CreateWorkoutForm from '@/components/CreateWorkoutForm.vue';
+
 const workoutsStore = useWorkoutsStore();
+const exercisesStore = useExercisesStore();
 
 const isCreateDialogVisible = ref(false);
 
@@ -14,7 +17,14 @@ function onConfirm(data: CreateWorkout) {
 
 <template>
   <div class="pt-10 flex flex-col gap-5 w-full h-full">
-    <template v-if="workoutsStore.workouts.length">
+    <template v-if="!exercisesStore.exercises.length">
+      <div class="text-3xl h-full flex flex-col gap-4 items-center justify-center">
+        <span>Упражнения не найдены</span>
+        <span class="text-xl">Сначала добавьте упражнения</span>
+      </div>
+    </template>
+
+    <template v-else-if="workoutsStore.workouts.length">
       <div class="flex justify-end">
         <Button
           severity="success"
