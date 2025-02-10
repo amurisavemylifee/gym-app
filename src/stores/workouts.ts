@@ -1,22 +1,30 @@
 import { useUuid } from '@/composition/useUuid';
 
-import type { CreateWorkout, GetWorkout, WorkoutId } from '@/types';
+import type { CreateWorkout, Workout, WorkoutId } from '@/types';
 
-const workouts = ref<GetWorkout[]>([]);
+const LOCAL_STORAGE_KEY = 'workouts';
+
+const workouts = ref<Workout[]>([]);
 
 export function useWorkoutsStore() {
-  onMounted(() => {
-    workouts.value = localStorage.getItem('workouts') ? JSON.parse(localStorage.getItem('workouts')!) : [];
+  onBeforeMount(() => {
+    workouts.value = localStorage.getItem(LOCAL_STORAGE_KEY) ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)!) : [];
   });
+
+  watch(
+    workouts,
+    () => {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([...workouts.value]));
+    },
+    { deep: true }
+  );
 
   const addWorkout = (workout: CreateWorkout) => {
     workouts.value.push({ workoutId: useUuid('workout'), ...workout });
-    localStorage.setItem('workouts', JSON.stringify(workouts.value));
   };
 
   const removeWorkout = (workoutId: WorkoutId) => {
     workouts.value = workouts.value.filter((item) => item.workoutId !== workoutId);
-    localStorage.setItem('workouts', JSON.stringify(workouts.value));
   };
 
   const updateWorkout = (workoutId: WorkoutId, workout: CreateWorkout) => {
@@ -24,11 +32,10 @@ export function useWorkoutsStore() {
 
     if (index !== -1) {
       workouts.value[index] = { workoutId, ...workout };
-      localStorage.setItem('workouts', JSON.stringify(workouts.value));
     }
   };
 
-  const getById = (workoutId: WorkoutId) => {
+  const getWorkoutById = (workoutId: WorkoutId) => {
     return workouts.value.find((item) => item.workoutId === workoutId);
   };
 
@@ -37,6 +44,6 @@ export function useWorkoutsStore() {
     addWorkout,
     removeWorkout,
     updateWorkout,
-    getById,
+    getWorkoutById,
   });
 }

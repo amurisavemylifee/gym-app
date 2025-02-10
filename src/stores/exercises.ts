@@ -14,7 +14,7 @@ export function useExercisesStore() {
   watch(
     exercises,
     () => {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(exercises));
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([...exercises.value]));
     },
     { deep: true }
   );

@@ -20,6 +20,7 @@ function onConfirm(data: CreateWorkout) {
     <template v-if="!exercisesStore.exercises.length">
       <div class="text-3xl h-full flex flex-col gap-4 items-center justify-center">
         <span>Упражнения не найдены</span>
+
         <span class="text-xl">Сначала добавьте упражнения</span>
       </div>
     </template>
@@ -47,12 +48,22 @@ function onConfirm(data: CreateWorkout) {
             {{ data.exercises.length }}
           </template>
         </Column>
+
+        <Column>
+          <template #body="{ data }">
+            <Button
+              severity="danger"
+              icon="pi pi-trash"
+              @click="workoutsStore.removeWorkout(data.workoutId)" />
+          </template>
+        </Column>
       </DataTable>
     </template>
 
     <template v-else>
       <div class="text-3xl h-full flex flex-col gap-4 items-center justify-center">
         <span>Тренировки не найдены</span>
+
         <Button
           severity="success"
           @click="isCreateDialogVisible = true">
