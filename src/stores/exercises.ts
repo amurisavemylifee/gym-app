@@ -2,22 +2,22 @@ import { useUuid } from '@/composition/useUuid';
 
 import type { CreateExercise, Exercise, ExerciseId } from '@/types';
 
-const LOCAL_STORAGE_KEY = 'exercises';
+// const LOCAL_STORAGE_KEY = 'exercises';
 
-const exercises = ref<Exercise[]>([]);
+const exercises = ref<Exercise[]>([{ exerciseId: useUuid('exercise'), name: 'test', description: 'test' }]);
 
 export function useExercisesStore() {
-  onBeforeMount(() => {
-    exercises.value = localStorage.getItem(LOCAL_STORAGE_KEY) ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)!) : [{ exerciseId: useUuid('exercise'), name: 'test', description: 'test' }];
-  });
+  // onBeforeMount(() => {
+  //   exercises.value = localStorage.getItem(LOCAL_STORAGE_KEY) ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)!) : [];
+  // });
 
-  watch(
-    exercises,
-    () => {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([...exercises.value]));
-    },
-    { deep: true }
-  );
+  // watch(
+  //   exercises,
+  //   () => {
+  //     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([...exercises.value]));
+  //   },
+  //   { deep: true }
+  // );
 
   const addExercise = (exercise: CreateExercise) => {
     exercises.value.push({ exerciseId: useUuid('exercise'), ...exercise });
