@@ -9,30 +9,39 @@ const isCreateDialogVisible = ref(false);
 
 function onConfirm(data: CreateExercise) {
   exercisesStore.addExercise(data);
-
   isCreateDialogVisible.value = false;
 }
-
-
 </script>
 
 <template>
   <div class="pt-10 flex flex-col gap-5 w-full h-full">
-
-    
     <template v-if="exercisesStore.exercises.length">
       <DataTable :value="exercisesStore.exercises">
+        <div class="flex justify-end">
+        <Button
+          severity="success"
+          @click="isCreateDialogVisible = true">
+          Добавить
+        </Button>
+      </div>
         <Column
           field="name"
           header="Название" />
         <Column
           field="description"
           header="Описание" />
+        <Column>
+          <template #body="{ data }">
+            <Button
+              severity="danger"
+              icon="pi pi-trash"
+              @click="exercisesStore.removeExercise(data.exerciseId)" />
+          </template>
+        </Column>
+
       </DataTable>
     </template>
-  
-    
-    
+
     <template v-else>
       <div class="text-3xl h-full flex flex-col gap-4 items-center justify-center">
         <span>Упражнения не найдены</span>
@@ -42,12 +51,12 @@ function onConfirm(data: CreateExercise) {
           Добавить
         </Button>
       </div>
-      
     </template>
-    <Dialog  log
-    v-model:visible="isCreateDialogVisible"
-    modal>
-    <CreateExercisesForm @confirm="onConfirm" />
-  </Dialog>
+    <Dialog
+      log
+      v-model:visible="isCreateDialogVisible"
+      modal>
+      <CreateExercisesForm @confirm="onConfirm" />
+    </Dialog>
   </div>
 </template>

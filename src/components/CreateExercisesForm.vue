@@ -1,16 +1,9 @@
 <script lang="ts" setup>
 import type { CreateWorkout } from '@/types';
-// import type { DataTableRowEditSaveEvent } from 'primevue';
 
 const $emits = defineEmits<{
   confirm: [data: CreateWorkout];
 }>();
-
-
-
-// function onEditConfirm(event: DataTableRowEditSaveEvent) {
-//   form.value.exercises[event.index] = event.newData;
-// }
 
 const form = ref<CreateWorkout>({
   name: '',
