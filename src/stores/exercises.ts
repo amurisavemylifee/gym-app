@@ -2,14 +2,14 @@ import { useUuid } from '@/composition/useUuid';
 
 import type { CreateExercise, Exercise, ExerciseId } from '@/types';
 
-const LOCAL_STORAGE_KEY = 'exercises';
+const LOCAL_STORAGE_KEY = '';
 
 const exercises = ref<Exercise[]>([]);
 //test
 
 export function useExercisesStore() {
   onBeforeMount(() => {
-    exercises.value = localStorage.getItem(LOCAL_STORAGE_KEY) ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)!) : [{ exerciseId: useUuid('exercise'), name: 'test', description: 'test' }];
+    exercises.value = localStorage.getItem(LOCAL_STORAGE_KEY) ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)!) : [];
   });
 
   watch(

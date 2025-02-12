@@ -73,7 +73,7 @@ function onConfirm(data: CreateWorkout) {
     </template>
   </div>
 
-  <Dialog
+  <Dialog  log
     v-model:visible="isCreateDialogVisible"
     modal>
     <CreateWorkoutForm @confirm="onConfirm" />
