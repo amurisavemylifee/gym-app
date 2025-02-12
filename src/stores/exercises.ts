@@ -5,6 +5,7 @@ import type { CreateExercise, Exercise, ExerciseId } from '@/types';
 const LOCAL_STORAGE_KEY = 'exercises';
 
 const exercises = ref<Exercise[]>([]);
+//test
 
 export function useExercisesStore() {
   onBeforeMount(() => {
