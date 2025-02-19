@@ -18,5 +18,10 @@ export default createRouter({
       name: 'completed-workouts',
       component: () => import('@/pages/PageCompletedWorkouts.vue'),
     },
+    {
+      path: '/user',
+      name: 'user',
+      component: () => import('@/pages/PageUser.vue'),
+    },
   ],
 });

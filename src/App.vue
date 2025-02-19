@@ -14,6 +14,10 @@ const menuItems: MenuItem[] = [
     label: 'Выполненные тренировки',
     route: { name: 'completed-workouts' },
   },
+  {
+    label: 'Профиль',
+    route: { name: 'user' },
+  },
 ];
 </script>
 
