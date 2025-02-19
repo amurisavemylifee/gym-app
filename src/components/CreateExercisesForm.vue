@@ -1,8 +1,13 @@
 <script lang="ts" setup>
-import type { CreateWorkout } from '@/types';
+import type { CreateWorkout, Exercise } from '@/types';
+
+const props = defineProps<{
+  exercise?: Exercise
+}>()
 
 const $emits = defineEmits<{
   confirm: [data: CreateWorkout];
+  cancel: []
 }>();
 
 const form = ref<CreateWorkout>({
@@ -17,6 +22,39 @@ const form = ref<CreateWorkout>({
     },
   ],
 });
+
+watch(
+  () => props.exercise,
+  (newExercise) => {
+    if (newExercise) {
+      form.value = {
+        name: newExercise.name,
+        description: newExercise.description,
+        exercises: newExercise.exercises,
+      };
+    } else {
+      form.value = {
+        name: '',
+        description: '',
+        exercises: [
+          {
+            exerciseId: '',
+            reps: [0],
+            sets: 1,
+            weights: [0],
+          },
+        ],
+      };
+    }
+  },
+  { immediate: true }
+);
+
+function onSave(){
+$emits('confirm', form.value)
+}
+
+
 </script>
 
 <template>
@@ -33,7 +71,7 @@ const form = ref<CreateWorkout>({
     <Button
       class="mt-10"
       severity="success"
-      @click="$emits('confirm', form)">
+      @click="onSave">
       Сохранить
     </Button>
   </div>

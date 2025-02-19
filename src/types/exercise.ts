@@ -5,6 +5,12 @@ export type ExerciseId = UUID;
 export interface CreateExercise {
   name: string;
   description: string;
+  exercises: {
+    exerciseId: string;
+    reps: number[];
+    sets: number;
+    weights: number[];
+  }[];
 }
 
 export interface Exercise extends CreateExercise {

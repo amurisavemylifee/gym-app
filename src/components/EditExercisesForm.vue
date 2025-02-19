@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<!-- <script lang="ts" setup>
 import type { Exercise } from '@/types';
 import { ref } from 'vue';
 
@@ -35,4 +35,4 @@ function onCancel() {
       <Button severity="danger" @click="onCancel">Отмена</Button>
     </div>
   </div>
-</template>
+</template> -->
