@@ -1,25 +1,20 @@
 <script setup lang="ts">
-import type { Exercise } from '@/types';
+import type { CreateExercise, Exercise } from '@/types';
+
 import CreateExercisesForm from '@/components/CreateExercisesForm.vue';
-import { useUuid } from '@/composition/useUuid';
-// import EditExercisesForm from '@/components/EditExercisesForm.vue';
 
 const exercisesStore = useExercisesStore();
+
 const isCreateDialogVisible = ref(false);
 const selectedExercise = ref<Exercise | null>(null);
 
-function onConfirm(data: Exercise) {
+function onConfirm(data: CreateExercise) {
   if (selectedExercise.value) {
     exercisesStore.updateExercise(selectedExercise.value.exerciseId, data);
   } else {
-    const newExercise: Exercise = {
-      exerciseId: useUuid('exercise'),
-      name: data.name,
-      description: data.description,
-      exercises: data.exercises,
-    };
-    exercisesStore.addExercise(newExercise);
+    exercisesStore.addExercise(data);
   }
+
   isCreateDialogVisible.value = false;
   selectedExercise.value = null;
 }

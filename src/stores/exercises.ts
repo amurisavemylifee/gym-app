@@ -28,7 +28,7 @@ export function useExercisesStore() {
     exercises.value = exercises.value.filter((item) => item.exerciseId !== exerciseId);
   };
 
-  const updateExercise = (exerciseId: ExerciseId, exercise: Exercise) => {
+  const updateExercise = (exerciseId: ExerciseId, exercise: CreateExercise) => {
     const index = exercises.value.findIndex((item) => item.exerciseId === exerciseId);
 
     if (index !== -1) {

@@ -1,60 +1,23 @@
 <script lang="ts" setup>
-import type { CreateWorkout, Exercise } from '@/types';
+import type { CreateExercise, Exercise } from '@/types';
 
-const props = defineProps<{
-  exercise?: Exercise
-}>()
-
-const $emits = defineEmits<{
-  confirm: [data: CreateWorkout];
-  cancel: []
+const $props = defineProps<{
+  exercise: Exercise | null;
 }>();
 
-const form = ref<CreateWorkout>({
-  name: '',
-  description: '',
-  exercises: [
-    {
-      exerciseId: '',
-      reps: [0],
-      sets: 1,
-      weights: [0],
-    },
-  ],
+const $emits = defineEmits<{
+  confirm: [data: CreateExercise];
+  cancel: [];
+}>();
+
+const form = ref<CreateExercise>({
+  name: $props.exercise?.name || '',
+  description: $props.exercise?.description || '',
 });
 
-watch(
-  () => props.exercise,
-  (newExercise) => {
-    if (newExercise) {
-      form.value = {
-        name: newExercise.name,
-        description: newExercise.description,
-        exercises: newExercise.exercises,
-      };
-    } else {
-      form.value = {
-        name: '',
-        description: '',
-        exercises: [
-          {
-            exerciseId: '',
-            reps: [0],
-            sets: 1,
-            weights: [0],
-          },
-        ],
-      };
-    }
-  },
-  { immediate: true }
-);
-
-function onSave(){
-$emits('confirm', form.value)
+function onSave() {
+  $emits('confirm', form.value);
 }
-
-
 </script>
 
 <template>
@@ -68,6 +31,7 @@ $emits('confirm', form.value)
       v-model="form.description"
       type="text"
       placeholder="Описание" />
+
     <Button
       class="mt-10"
       severity="success"
