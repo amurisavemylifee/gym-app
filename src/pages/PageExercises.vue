@@ -31,29 +31,43 @@ function onCreate() {
 </script>
 
 <template>
-  <div class="pt-10 flex flex-col gap-5 w-full h-full">
+  <div class="px-8 py-6 flex flex-col gap-6 w-full h-full">
     <template v-if="exercisesStore.exercises.length">
-      <DataTable :value="exercisesStore.exercises">
-        <div class="flex justify-end">
-          <Button
-            severity="success"
-            @click="onCreate"
-            >Добавить</Button
-          >
-        </div>
+      <div class="flex justify-start items-center gap-4 px-4">
+        <span class="text-2xl">Мои упражнения</span>
+
+        <Button
+          size="small"
+          @click="onCreate">
+          Добавить
+        </Button>
+      </div>
+
+      <DataTable
+        scrollable
+        paginator
+        show-gridlines
+        :rows="11"
+        :value="exercisesStore.exercises">
         <Column
           field="name"
           header="Название" />
+
         <Column
           field="description"
           header="Описание" />
-        <Column>
+
+        <Column
+          frozen
+          alignFrozen="right"
+          :style="{ width: '88px' }">
           <template #body="{ data }">
             <div class="flex gap-2">
               <Button
-                severity="warn"
+                severity="secondary"
                 icon="pi pi-pencil"
                 @click="onEdit(data)" />
+
               <Button
                 severity="danger"
                 icon="pi pi-trash"
@@ -63,22 +77,25 @@ function onCreate() {
         </Column>
       </DataTable>
     </template>
+
     <template v-else>
-      <div class="text-3xl h-full flex flex-col gap-4 items-center justify-center">
-        <span>Упражнения не найдены</span>
-        <Button
-          severity="success"
-          @click="onCreate"
-          >Добавить</Button
-        >
+      <div class="h-full flex flex-col gap-4 items-center justify-center">
+        <span class="text-3xl">Упражнения не найдены</span>
+
+        <Button @click="onCreate">Добавить</Button>
       </div>
     </template>
+
     <Dialog
       v-model:visible="isCreateDialogVisible"
-      modal>
+      class="w-[600px]"
+      modal
+      :closable="false"
+      :draggable="false">
       <CreateExercisesForm
         :exercise="selectedExercise"
-        @confirm="onConfirm" />
+        @confirm="onConfirm"
+        @cancel="isCreateDialogVisible = false" />
     </Dialog>
   </div>
 </template>
