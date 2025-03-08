@@ -15,8 +15,12 @@ const form = ref<CreateExercise>({
   description: $props.exercise?.description || '',
 });
 
-function onSave() {
+function saveForm() {
   $emits('confirm', form.value);
+}
+
+function closeDialog() {
+  $emits('cancel');
 }
 
 const dialogTitle = computed(() => {
@@ -39,7 +43,7 @@ const dialogTitle = computed(() => {
         variant="text"
         rounded
         aria-label="Cancel"
-        @click="$emits('cancel')" />
+        @click="closeDialog" />
     </div>
 
     <div class="flex flex-col gap-4">
@@ -54,16 +58,16 @@ const dialogTitle = computed(() => {
         placeholder="Описание" />
     </div>
 
-    <div class="flex gap-4">
+    <div class="flex gap-4 justify-end">
       <Button
         severity="success"
-        @click="onSave">
+        @click="saveForm">
         Сохранить
       </Button>
 
       <Button
         severity="danger"
-        @click="$emits('cancel')">
+        @click="closeDialog">
         Отменить
       </Button>
     </div>

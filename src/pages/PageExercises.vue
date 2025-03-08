@@ -20,11 +20,11 @@ function onConfirm(data: CreateExercise) {
 }
 
 function onEdit(exercise: Exercise) {
-  selectedExercise.value = exercise;
+  selectedExercise.value = JSON.parse(JSON.stringify(exercise));
   isCreateDialogVisible.value = true;
 }
 
-function onCreate() {
+function openEditDialog() {
   selectedExercise.value = null;
   isCreateDialogVisible.value = true;
 }
@@ -38,7 +38,7 @@ function onCreate() {
 
         <Button
           size="small"
-          @click="onCreate">
+          @click="openEditDialog">
           Добавить
         </Button>
       </div>
@@ -82,7 +82,7 @@ function onCreate() {
       <div class="h-full flex flex-col gap-4 items-center justify-center">
         <span class="text-3xl">Упражнения не найдены</span>
 
-        <Button @click="onCreate">Добавить</Button>
+        <Button @click="openEditDialog">Добавить</Button>
       </div>
     </template>
 

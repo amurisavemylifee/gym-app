@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CreateWorkout } from '@/types';
+import type { CreateWorkout, Workout } from '@/types';
 
 import CreateWorkoutForm from '@/components/CreateWorkoutForm.vue';
 
@@ -7,34 +7,65 @@ const workoutsStore = useWorkoutsStore();
 const exercisesStore = useExercisesStore();
 
 const isCreateDialogVisible = ref(false);
+const selectedWorkout = ref<Workout | null>(null);
 
 function onConfirm(data: CreateWorkout) {
-  workoutsStore.addWorkout(data);
+  if (selectedWorkout.value) {
+    workoutsStore.updateWorkout(selectedWorkout.value.workoutId, data);
+  } else {
+    workoutsStore.addWorkout(data);
+  }
 
   isCreateDialogVisible.value = false;
+  selectedWorkout.value = null;
+}
+
+function editWorkout(workout: Workout) {
+  selectedWorkout.value = JSON.parse(JSON.stringify(workout));
+  isCreateDialogVisible.value = true;
+}
+
+function openEditDialog() {
+  selectedWorkout.value = null;
+  isCreateDialogVisible.value = true;
 }
 </script>
 
 <template>
-  <div class="pt-10 flex flex-col gap-5 w-full h-full">
-    <template v-if="!exercisesStore.exercises.length">
-      <div class="text-3xl h-full flex flex-col gap-4 items-center justify-center">
-        <span>Упражнения не найдены</span>
+  <div class="px-8 py-6 flex flex-col gap-6 w-full h-full">
+    <template v-if="!workoutsStore.workouts.length || !exercisesStore.exercises.length">
+      <div class="h-full flex flex-col gap-4 items-center justify-center">
+        <template v-if="!exercisesStore.exercises.length">
+          <span class="text-3xl">Сначала добавьте упражнения</span>
 
-        <span class="text-xl">Сначала добавьте упражнения</span>
+          <Button @click="$router.push({ name: 'exercises' })">Перейти</Button>
+        </template>
+
+        <template v-else>
+          <span class="text-3xl">Тренировки не найдены</span>
+
+          <Button @click="openEditDialog">Добавить</Button>
+        </template>
       </div>
     </template>
 
     <template v-else-if="workoutsStore.workouts.length">
-      <div class="flex justify-end">
+      <div class="flex justify-start items-center gap-4 px-4">
+        <span class="text-2xl">Мои тренировки</span>
+
         <Button
-          severity="success"
-          @click="isCreateDialogVisible = true">
+          size="small"
+          @click="openEditDialog">
           Добавить
         </Button>
       </div>
 
-      <DataTable :value="workoutsStore.workouts">
+      <DataTable
+        scrollable
+        paginator
+        show-gridlines
+        :rows="11"
+        :value="workoutsStore.workouts">
         <Column
           field="name"
           header="Название" />
@@ -49,33 +80,37 @@ function onConfirm(data: CreateWorkout) {
           </template>
         </Column>
 
-        <Column>
+        <Column
+          frozen
+          alignFrozen="right"
+          :style="{ width: '88px' }">
           <template #body="{ data }">
-            <Button
-              severity="danger"
-              icon="pi pi-trash"
-              @click="workoutsStore.removeWorkout(data.workoutId)" />
+            <div class="flex gap-2">
+              <Button
+                severity="secondary"
+                icon="pi pi-pencil"
+                @click="editWorkout(data)" />
+
+              <Button
+                severity="danger"
+                icon="pi pi-trash"
+                @click="workoutsStore.removeWorkout(data.workoutId)" />
+            </div>
           </template>
         </Column>
       </DataTable>
     </template>
-
-    <template v-else>
-      <div class="text-3xl h-full flex flex-col gap-4 items-center justify-center">
-        <span>Тренировки не найдены</span>
-
-        <Button
-          severity="success"
-          @click="isCreateDialogVisible = true">
-          Добавить
-        </Button>
-      </div>
-    </template>
   </div>
 
-  <Dialog  log
+  <Dialog
     v-model:visible="isCreateDialogVisible"
-    modal>
-    <CreateWorkoutForm @confirm="onConfirm" />
+    class="w-[600px]"
+    modal
+    :closable="false"
+    :draggable="false">
+    <CreateWorkoutForm
+      :workout="selectedWorkout"
+      @confirm="onConfirm"
+      @cancel="isCreateDialogVisible = false" />
   </Dialog>
 </template>
